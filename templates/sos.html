@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Emergency SOS | Women Safety Analytics</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #fff1f2;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #8b0000;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 22px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            background: #b91c1c;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .icon {
+            font-size: 70px;
+        }
+
+        h1 {
+            color: #b91c1c;
+            margin: 15px 0;
+        }
+
+        .description {
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .sos-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: none;
+            background: #dc2626;
+            color: white;
+            font-size: 42px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 0 15px #fecaca;
+            transition: 0.3s;
+        }
+
+        .sos-button:hover {
+            transform: scale(1.05);
+            background: #991b1b;
+        }
+
+        .location {
+            background: #f8fafc;
+            margin-top: 35px;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .location h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #locationText {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        #status {
+            margin-top: 25px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .warning {
+            margin-top: 25px;
+            background: #fef2f2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h2>🛡️ Women Safety Analytics</h2>
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+    </div>
+
+
+    <div class="container">
+
+        <div class="card">
+
+            <div class="icon">🚨</div>
+
+            <h1>Emergency SOS</h1>
+
+            <p class="description">
+                Use this button when you are in an emergency
+                or feel unsafe.
+            </p>
+
+
+            <button
+                class="sos-button"
+                onclick="sendSOS()">
+
+                SOS
+
+            </button>
+
+
+            <div class="location">
+
+                <h3>📍 Current Location</h3>
+
+                <p id="locationText">
+                    Location not detected
+                </p>
+
+            </div>
+
+
+            <p id="status"></p>
+
+
+            <div class="warning">
+
+                ⚠️ SOS alert will be recorded in the
+                Women Safety Analytics system.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<script>
+
+function sendSOS() {
+
+    const status =
+        document.getElementById("status");
+
+    const locationText =
+        document.getElementById("locationText");
+
+
+    status.innerHTML =
+        "📍 Getting your location...";
+
+    status.style.color = "#b45309";
+
+
+    if (!navigator.geolocation) {
+
+        status.innerHTML =
+            "❌ Location is not supported.";
+
+        status.style.color = "red";
+
+        return;
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            locationText.innerHTML =
+                "Latitude: " + latitude +
+                "<br>Longitude: " + longitude;
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "latitude",
+                latitude
+            );
+
+
+            formData.append(
+                "longitude",
+                longitude
+            );
+
+
+            formData.append(
+                "message",
+                "Emergency! I need help."
+            );
+
+
+            fetch("/send_sos", {
+
+                method: "POST",
+
+                body: formData
+
+            })
+
+            .then(response =>
+                response.json()
+            )
+
+            .then(data => {
+
+                if (data.success) {
+
+                    status.innerHTML =
+                        "🚨 SOS ALERT RECORDED SUCCESSFULLY!";
+
+                    status.style.color =
+                        "green";
+
+                } else {
+
+                    status.innerHTML =
+                        "❌ " + data.message;
+
+                    status.style.color =
+                        "red";
+                }
+
+            })
+
+            .catch(error => {
+
+                status.innerHTML =
+                    "❌ Unable to send SOS.";
+
+                status.style.color =
+                    "red";
+
+            });
+
+        },
+
+        function(error) {
+
+            status.innerHTML =
+                "❌ Please allow location permission.";
+
+            status.style.color =
+                "red";
+
+        }
+
+    );
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+}
+
+
+/* HOME */
+
+.hero-section {
+    background: linear-gradient(
+        135deg,
+        #fff,
+        #ffe8ec
+    );
+}
+
+.safety-card {
+    background: white;
+    padding: 50px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.safety-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+
+/* LOGIN / REGISTER */
+
+.auth-body {
+    background: linear-gradient(
+        135deg,
+        #fff0f2,
+        #f5f6fa
+    );
+}
+
+.auth-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.auth-icon {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.form-control:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.15);
+}
+
+
+/* DASHBOARD */
+
+.sidebar {
+    min-height: calc(100vh - 56px);
+    background: #212529;
+    padding: 25px 15px;
+    color: white;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: #dc3545;
+}
+
+.logout-link {
+    margin-top: 30px;
+}
+
+.dashboard-content {
+    padding: 35px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+}
+
+.dashboard-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.sos-panel {
+    background: #fff0f2;
+    border: 1px solid #ffc5cc;
+    padding: 30px;
+    border-radius: 15px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quick-card {
+    display: block;
+    background: white;
+    color: #212529;
+    text-decoration: none;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+    text-align: center;
+}
+
+.quick-card:hover {
+    color: #dc3545;
+    transform: translateY(-3px);
+}
+
+
+/* MOBILE */
+
+@media(max-width: 768px) {
+
+    .sidebar {
+        min-height: auto;
+    }
+
+    .dashboard-content {
+        padding: 20px;
+    }
+
+    .sos-panel {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .hero-section {
+        text-align: center;
+    }
+
+}
