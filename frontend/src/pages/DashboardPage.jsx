@@ -58,10 +58,15 @@ export const DashboardPage = ({ setActiveTab }) => {
 
       try {
         // 2. Fetch emergency contacts
-        const contactsRes = await contactsApi.getAll(user?.id || 2);
-        if (contactsRes?.contacts) setContacts(contactsRes.contacts);
+        if (user?.id) {
+          const contactsRes = await contactsApi.getAll(user.id);
+          if (contactsRes?.contacts) setContacts(contactsRes.contacts);
+        } else {
+          setContacts([]);
+        }
       } catch (e) {
         console.warn('Contacts fallback:', e);
+        setContacts([]);
       }
 
       try {
@@ -97,7 +102,7 @@ export const DashboardPage = ({ setActiveTab }) => {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-['Outfit']">
-            Welcome, {user?.fullname || 'Sarah'} 👋
+            Welcome, {user?.fullname || 'Safety Network Member'} 👋
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 max-w-lg">
             Your personal safety perimeter is monitored. In case of any threat, tap the Emergency SOS button below immediately.

@@ -108,8 +108,8 @@ export const IncidentReportPage = () => {
     try {
       await incidentsApi.submit({
         ...formData,
-        user_id: formData.is_anonymous ? null : user?.id || 2,
-        reporter_name: formData.is_anonymous ? 'Anonymous Reporter' : user?.fullname || 'Sarah'
+        user_id: formData.is_anonymous ? null : user?.id || null,
+        reporter_name: formData.is_anonymous ? 'Anonymous Reporter' : user?.fullname || 'Community Reporter'
       });
 
       setSubmittedSuccess(true);

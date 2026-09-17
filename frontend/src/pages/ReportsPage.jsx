@@ -53,7 +53,7 @@ export const ReportsPage = () => {
   const downloadJSON = () => {
     const reportObj = {
       report_title: "Women Safety Analytics - Comprehensive Audit & Security Assessment",
-      generated_for: user?.fullname || "Sarah Jenkins",
+      generated_for: user?.fullname || "Safety Network Member",
       generated_at: new Date().toISOString(),
       scope_city: city,
       timeframe: dateRange,
@@ -185,7 +185,7 @@ export const ReportsPage = () => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs">
           <div>
             <span className="text-slate-500 block text-[10px]">Recipient User</span>
-            <span className="font-bold text-white">{user?.fullname || 'Sarah Jenkins'}</span>
+            <span className="font-bold text-white">{user?.fullname || 'Safety Network Member'}</span>
           </div>
           <div>
             <span className="text-slate-500 block text-[10px]">Jurisdiction</span>

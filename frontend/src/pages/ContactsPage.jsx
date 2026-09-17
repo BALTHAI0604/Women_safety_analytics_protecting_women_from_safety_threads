@@ -35,16 +35,15 @@ export const ContactsPage = () => {
   const fetchContacts = async () => {
     setLoading(true);
     try {
-      const res = await contactsApi.getAll(user?.id || 2);
-      if (res?.contacts) setContacts(res.contacts);
+      if (user?.id) {
+        const res = await contactsApi.getAll(user.id);
+        if (res?.contacts) setContacts(res.contacts);
+      } else {
+        setContacts([]);
+      }
     } catch (e) {
       console.warn('Contacts fetch fallback:', e);
-      // Fallback
-      setContacts([
-        { id: 1, name: 'Eleanor Jenkins', phone: '+1 (555) 234-5678', relationship: 'Mother', email: 'eleanor@example.com', is_primary: 1 },
-        { id: 2, name: 'Marcus Vance', phone: '+1 (555) 876-5432', relationship: 'Brother', email: 'marcus@example.com', is_primary: 0 },
-        { id: 3, name: 'Maya Lin', phone: '+1 (555) 345-6789', relationship: 'Friend / Roommate', email: 'maya@example.com', is_primary: 0 }
-      ]);
+      setContacts([]);
     } finally {
       setLoading(false);
     }

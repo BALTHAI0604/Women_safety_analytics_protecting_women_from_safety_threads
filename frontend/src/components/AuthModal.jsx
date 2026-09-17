@@ -24,7 +24,7 @@ export const AuthModal = () => {
 
     try {
       if (authModalMode === 'login') {
-        await login(formData.email, formData.password);
+        await login(formData.email, formData.password, formData.fullname);
       } else {
         await register(formData);
       }
@@ -60,7 +60,7 @@ export const AuthModal = () => {
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Sign In
+            Direct Sign In / Login
           </button>
           <button
             onClick={() => { setAuthModalMode('register'); setError(''); }}
@@ -70,17 +70,19 @@ export const AuthModal = () => {
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Create Account
+            Detailed Register
           </button>
         </div>
 
-        {/* Title */}
+        {/* Title & Instant Notice */}
         <div className="mb-5 text-center">
           <h3 className="text-xl font-bold font-['Outfit'] text-white">
-            {authModalMode === 'login' ? 'Welcome Back to Safety Hub' : 'Join Women Safety Network'}
+            {authModalMode === 'login' ? 'Direct Safety Hub Sign In' : 'Join Women Safety Network'}
           </h3>
           <p className="text-xs text-slate-400 mt-1">
-            {authModalMode === 'login' ? 'Sign in to access your dashboard & emergency network' : 'Register for AI-guided protection and real-time safety analytics'}
+            {authModalMode === 'login' 
+              ? 'Sign in with your email & password. New users are automatically registered on login!' 
+              : 'Register for AI-guided protection and real-time safety analytics'}
           </p>
         </div>
 
@@ -119,6 +121,25 @@ export const AuthModal = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3.5">
+          {authModalMode === 'login' && (
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-[11px] font-semibold text-slate-300">Display Name (Optional)</label>
+                <span className="text-[10px] text-slate-500">Auto-generated if blank</span>
+              </div>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                <input
+                  type="text"
+                  value={formData.fullname}
+                  onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
+                  placeholder="e.g. Priyadharshini"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                />
+              </div>
+            </div>
+          )}
+
           {authModalMode === 'register' && (
             <div>
               <label className="block text-[11px] font-semibold text-slate-300 mb-1">Full Name</label>
@@ -201,7 +222,7 @@ export const AuthModal = () => {
             disabled={loading}
             className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition transform active:scale-98 disabled:opacity-50 mt-2"
           >
-            {loading ? 'Authenticating...' : authModalMode === 'login' ? 'Sign In' : 'Create Account'}
+            {loading ? 'Authenticating...' : authModalMode === 'login' ? 'Direct Sign In / Enter' : 'Create Account'}
           </button>
         </form>
       </div>

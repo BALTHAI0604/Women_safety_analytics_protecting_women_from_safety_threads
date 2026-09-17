@@ -13,16 +13,26 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 export const ProfilePage = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, openAuth } = useAuth();
 
   const [formData, setFormData] = useState({
-    fullname: user?.fullname || 'Sarah Jenkins',
-    phone: user?.phone || '+1 (555) 014-3890',
-    medical_info: user?.medical_info || 'Blood Type: A+, Asthmatic - Inhaler in purse'
+    fullname: user?.fullname || '',
+    phone: user?.phone || '',
+    medical_info: user?.medical_info || ''
   });
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  React.useEffect(() => {
+    if (user) {
+      setFormData({
+        fullname: user.fullname || '',
+        phone: user.phone || '',
+        medical_info: user.medical_info || ''
+      });
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +47,26 @@ export const ProfilePage = () => {
       setSaving(false);
     }
   };
+
+  if (!user) {
+    return (
+      <div className="max-w-md mx-auto my-12 glass-panel rounded-3xl p-8 border border-slate-800 text-center space-y-4">
+        <div className="w-16 h-16 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto border border-rose-500/30">
+          <User className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-white font-['Outfit']">Sign In to View Profile</h2>
+        <p className="text-xs text-slate-400 leading-relaxed">
+          Please log in to manage your identity, emergency medical information, and contact credentials.
+        </p>
+        <button
+          onClick={() => openAuth('login')}
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition"
+        >
+          Sign In / Enter
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 pb-16">
@@ -69,15 +99,15 @@ export const ProfilePage = () => {
         {/* User Card */}
         <div className="flex items-center gap-4 pb-6 border-b border-slate-800">
           <img
-            src={user?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'}
+            src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
             alt="Profile Avatar"
             className="w-16 h-16 rounded-2xl object-cover border-2 border-rose-500/50 shadow-lg shadow-rose-600/20"
           />
           <div>
-            <h3 className="text-lg font-bold text-white font-['Outfit']">{user?.fullname || 'Sarah Jenkins'}</h3>
-            <p className="text-xs text-slate-400">{user?.email || 'sarah@example.com'}</p>
+            <h3 className="text-lg font-bold text-white font-['Outfit']">{user.fullname || 'User'}</h3>
+            <p className="text-xs text-slate-400">{user.email}</p>
             <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 capitalize">
-              Role: {user?.role || 'User'}
+              Role: {user.role || 'User'}
             </span>
           </div>
         </div>
