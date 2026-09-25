@@ -110,9 +110,15 @@ export const ReportsPage = () => {
               className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-rose-500"
             >
               <option value="All">All Monitored Jurisdictions</option>
-              <option value="Bengaluru">Bengaluru Metropolitan</option>
+              <option value="Karur">Karur (Tamil Nadu)</option>
+              <option value="Chennai">Chennai Metropolitan (Tamil Nadu)</option>
+              <option value="Coimbatore">Coimbatore (Tamil Nadu)</option>
+              <option value="Madurai">Madurai (Tamil Nadu)</option>
+              <option value="Tiruchirappalli">Tiruchirappalli (Trichy)</option>
+              <option value="Bengaluru">Bengaluru Metropolitan (Karnataka)</option>
               <option value="Delhi">Delhi NCR Region</option>
-              <option value="Mumbai">Mumbai Suburbs & Central</option>
+              <option value="Mumbai">Mumbai Suburbs & Central (Maharashtra)</option>
+              <option value="Hyderabad">Hyderabad (Telangana)</option>
               <option value="New York">New York City Districts</option>
             </select>
           </div>

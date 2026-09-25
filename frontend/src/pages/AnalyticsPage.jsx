@@ -29,11 +29,13 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { analyticsApi } from '../utils/api';
+import { useLocation } from '../context/LocationContext';
 
 const COLORS = ['#f43f5e', '#a855f7', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#6366f1'];
 
 export const AnalyticsPage = () => {
-  const [selectedCity, setSelectedCity] = useState('All');
+  const { coords, openLocationSelector } = useLocation();
+  const [selectedCity, setSelectedCity] = useState(coords.city || 'Karur');
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -111,7 +113,7 @@ export const AnalyticsPage = () => {
     document.body.removeChild(link);
   };
 
-  const cities = ['All', 'Bengaluru', 'Delhi', 'Mumbai', 'New York'];
+  const cities = ['All', 'Karur', 'Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem', 'Erode', 'Bengaluru', 'Delhi', 'Mumbai', 'Hyderabad', 'Kochi', 'New York'];
 
   return (
     <div className="space-y-6 pb-16">
@@ -123,12 +125,15 @@ export const AnalyticsPage = () => {
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-300 border border-rose-500/20">
               Predictive AI Analytics
             </span>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+              Region: {selectedCity}
+            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-['Outfit'] mt-1">
             Crime Analytics & High-Risk Zones
           </h1>
           <p className="text-xs text-slate-400">
-            Real-time multi-dimensional crime pattern recognition and vulnerability mapping
+            Real-time multi-dimensional crime pattern recognition and vulnerability mapping for {selectedCity} and nationwide.
           </p>
         </div>
 
@@ -142,10 +147,18 @@ export const AnalyticsPage = () => {
               className="bg-transparent text-white text-xs font-semibold focus:outline-none pr-2"
             >
               {cities.map(c => (
-                <option key={c} value={c} className="bg-slate-900 text-white">{c} Region</option>
+                <option key={c} value={c} className="bg-slate-900 text-white">{c} {c === 'All' ? 'Jurisdictions' : 'Region'}</option>
               ))}
             </select>
           </div>
+
+          <button
+            onClick={openLocationSelector}
+            className="px-3 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 text-xs font-semibold border border-rose-500/40 flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <MapPin className="w-3.5 h-3.5 text-rose-400" />
+            <span>Select State / District</span>
+          </button>
 
           <button
             onClick={exportCSV}

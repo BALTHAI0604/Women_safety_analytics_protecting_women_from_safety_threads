@@ -127,10 +127,15 @@ export const AuthProvider = ({ children }) => {
     if (!user) return;
     try {
       const res = await authApi.updateProfile(user.id, updatedData);
-      setUser(res.user);
-      return res.user;
+      const nextUser = res.user;
+      setUser(nextUser);
+      localStorage.setItem('ws_user', JSON.stringify(nextUser));
+      return nextUser;
     } catch (err) {
-      setUser(prev => ({ ...prev, ...updatedData }));
+      const nextUser = { ...user, ...updatedData };
+      setUser(nextUser);
+      localStorage.setItem('ws_user', JSON.stringify(nextUser));
+      return nextUser;
     }
   };
 

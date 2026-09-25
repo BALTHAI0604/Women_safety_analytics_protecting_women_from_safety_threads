@@ -1,22 +1,45 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { LocationSelectorModal } from '../components/LocationSelectorModal';
 
 const LocationContext = createContext(null);
 
 const DEFAULT_COORDS = {
-  latitude: 12.9716,
-  longitude: 77.5946,
-  accuracy: 12,
-  address: 'MG Road, Central Business District, Bengaluru',
-  city: 'Bengaluru',
-  state: 'Karnataka',
+  latitude: 10.9601,
+  longitude: 78.0766,
+  accuracy: 10,
+  address: 'Karur Town, Karur, Tamil Nadu, India',
+  city: 'Karur',
+  state: 'Tamil Nadu',
   country: 'India'
 };
 
 export const LocationProvider = ({ children }) => {
-  const [coords, setCoords] = useState(DEFAULT_COORDS);
+  const [coords, setCoords] = useState(() => {
+    const saved = localStorage.getItem('wsa_user_coords');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.warn('Failed to parse saved coords:', e);
+      }
+    }
+    return DEFAULT_COORDS;
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [permissionState, setPermissionState] = useState('prompt'); // 'prompt' | 'granted' | 'denied'
   const [error, setError] = useState(null);
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+
+  // Sync coords changes to localStorage
+  useEffect(() => {
+    if (coords) {
+      localStorage.setItem('wsa_user_coords', JSON.stringify(coords));
+    }
+  }, [coords]);
+
+  const openLocationSelector = () => setIsSelectorOpen(true);
+  const closeLocationSelector = () => setIsSelectorOpen(false);
 
   const reverseGeocode = async (lat, lon) => {
     try {
@@ -26,9 +49,9 @@ export const LocationProvider = ({ children }) => {
       if (res.ok) {
         const data = await res.json();
         const address = data.display_name || `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-        const city = data.address?.city || data.address?.town || data.address?.state_district || 'Bengaluru';
-        const state = data.address?.state || '';
-        const country = data.address?.country || '';
+        const city = data.address?.city || data.address?.town || data.address?.state_district || data.address?.county || 'Karur';
+        const state = data.address?.state || 'Tamil Nadu';
+        const country = data.address?.country || 'India';
         return { address, city, state, country };
       }
     } catch (e) {
@@ -36,8 +59,8 @@ export const LocationProvider = ({ children }) => {
     }
     return {
       address: `Lat: ${lat.toFixed(5)}, Lng: ${lon.toFixed(5)}`,
-      city: 'Bengaluru',
-      state: 'Karnataka',
+      city: 'Karur',
+      state: 'Tamil Nadu',
       country: 'India'
     };
   };
@@ -61,7 +84,7 @@ export const LocationProvider = ({ children }) => {
         setPermissionState('granted');
         const geoInfo = await reverseGeocode(lat, lon);
 
-        setCoords({
+        const newCoords = {
           latitude: lat,
           longitude: lon,
           accuracy: acc,
@@ -69,7 +92,8 @@ export const LocationProvider = ({ children }) => {
           city: geoInfo.city,
           state: geoInfo.state,
           country: geoInfo.country
-        });
+        };
+        setCoords(newCoords);
         setIsLoading(false);
       },
       (err) => {
@@ -82,22 +106,30 @@ export const LocationProvider = ({ children }) => {
     );
   };
 
-  useEffect(() => {
-    refreshLocation();
-  }, []);
-
-  const setManualLocation = async (lat, lon, cityName = 'Custom Location') => {
+  const setManualLocation = async (lat, lon, cityName = 'Custom Location', stateName = '', countryName = 'India', customAddress = '') => {
     setIsLoading(true);
-    const geoInfo = await reverseGeocode(lat, lon);
-    setCoords({
-      latitude: lat,
-      longitude: lon,
+    let address = customAddress;
+    let state = stateName;
+    let country = countryName;
+
+    if (!address) {
+      const geoInfo = await reverseGeocode(lat, lon);
+      address = geoInfo.address;
+      state = state || geoInfo.state;
+      country = country || geoInfo.country;
+    }
+
+    const newCoords = {
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lon),
       accuracy: 5,
-      address: geoInfo.address,
-      city: cityName || geoInfo.city,
-      state: geoInfo.state,
-      country: geoInfo.country
-    });
+      address: address || `${cityName}, ${state ? state + ', ' : ''}${country}`,
+      city: cityName,
+      state: state,
+      country: country
+    };
+
+    setCoords(newCoords);
     setIsLoading(false);
   };
 
@@ -107,10 +139,14 @@ export const LocationProvider = ({ children }) => {
       isLoading,
       permissionState,
       error,
+      isSelectorOpen,
+      openLocationSelector,
+      closeLocationSelector,
       refreshLocation,
       setManualLocation
     }}>
       {children}
+      <LocationSelectorModal />
     </LocationContext.Provider>
   );
 };

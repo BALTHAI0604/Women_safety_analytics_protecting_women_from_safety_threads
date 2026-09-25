@@ -42,25 +42,25 @@ function AppContent() {
       case 'dashboard':
         return <DashboardPage setActiveTab={setActiveTab} />;
       case 'sos':
-        return <SOSPage />;
+        return <SOSPage setActiveTab={setActiveTab} />;
       case 'ai-assistant':
-        return <AIAssistantPage />;
+        return <AIAssistantPage setActiveTab={setActiveTab} />;
       case 'analytics':
-        return <AnalyticsPage />;
+        return <AnalyticsPage setActiveTab={setActiveTab} />;
       case 'contacts':
-        return <ContactsPage />;
+        return <ContactsPage setActiveTab={setActiveTab} />;
       case 'incidents':
-        return <IncidentReportPage />;
+        return <IncidentReportPage setActiveTab={setActiveTab} />;
       case 'resources':
-        return <NearbyResourcesPage />;
+        return <NearbyResourcesPage setActiveTab={setActiveTab} />;
       case 'tips':
-        return <SafetyTipsPage />;
+        return <SafetyTipsPage setActiveTab={setActiveTab} />;
       case 'reports':
-        return <ReportsPage />;
+        return <ReportsPage setActiveTab={setActiveTab} />;
       case 'admin':
-        return <AdminPage />;
+        return <AdminPage setActiveTab={setActiveTab} />;
       case 'profile':
-        return <ProfilePage />;
+        return <ProfilePage setActiveTab={setActiveTab} />;
       default:
         return <LandingPage setActiveTab={setActiveTab} />;
     }
